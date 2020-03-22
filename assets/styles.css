@@ -1,0 +1,51 @@
+nav {
+    margin-top: 5px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+#headerAndQText {
+    margin-top: 100px;
+}
+/*Format the buttons*/
+.btn-primary {
+    color: #fff;
+    background-color: #7e277e;
+    border-color: #7e277e;
+}
+  
+.btn-primary:hover {
+    color: #fff;
+    background-color: #9e319e;
+    border-color: #c53ec5;
+}
+  
+.btn-primary:focus, .btn-primary.focus {
+    color: #fff;
+    background-color: #9e319e;
+    border-color: #c53ec5;
+    box-shadow: 0 0 0 0.2rem rgba(78, 0, 94, 0.5);
+}
+  
+  .btn-primary.disabled, .btn-primary:disabled {
+    color: #fff;
+    background-color: #7e277e;
+    border-color: #7e277e;
+}
+  
+.btn-primary:not(:disabled):not(.disabled):active, .btn-primary:not(:disabled):not(.disabled).active,
+  .show > .btn-primary.dropdown-toggle {
+    color: #fff;
+    background-color: #9e319e;
+    border-color: #c53ec5;
+}
+  
+.btn-primary:not(:disabled):not(.disabled):active:focus, .btn-primary:not(:disabled):not(.disabled).active:focus,
+  .show > .btn-primary.dropdown-toggle:focus {
+    box-shadow: 0 0 0 0.2rem rgba(78, 0, 94, 0.5);
+}
+
+#startBtn {
+    margin-top: 10px;
+    margin-left: 28%;
+}
