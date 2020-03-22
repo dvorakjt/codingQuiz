@@ -7,7 +7,9 @@ var questions = [];
 var timer;
 var uiTime;
 var currentQ = 0;
-/////////////////////////////////////////////////Question Bank////////////////////////////////////////////////
+var myScore;
+var highScores = [];
+////////////////////////////////////////////////Question Bank////////////////////////////////////////////////
 questions[0] = {
     qText: "What is a variable?",
     qAnswers: ["A function whose outcome is unpredictable.", "A named memory location whose value can change throughout execution.",
@@ -102,7 +104,51 @@ function loadQuestion() {
     }
     currentQ++;
 }
+////////////////////////////////////////////////////Load Name Input Form/////////////////////////////////////////////////////////////////////////
+var loadInputForm = function () {
+    //empty the current text
+    $("#headerAndQText").empty();
+    $("#buttonsDiv").empty();
 
+    //add a new message in the header
+    var newMessage = $("<h3>");
+    $(newMessage).text("Congratulations, you scored " + myScore + " points!");
+    $("#headerAndQText").append(newMessage);
+
+    //create a form
+    var newForm = $("<form>");
+    $("#introAndFormText").append(newForm);
+
+    //create a div within the form
+    var newFormDiv = $("<div>");
+    $(newFormDiv).addClass("form-group");
+    $(newForm).append(newFormDiv);
+
+    //create a label within the div
+    var newFormLabel = $("<label>");
+    $(newFormLabel).attr("for", "nameInput");
+    $(newFormLabel).text("Please enter your name.")
+    $(newFormDiv).append(newFormLabel);
+
+    //create a form in within the div
+    var newFormInput = $("<input>");
+    $(newFormInput).addClass("form-control");
+    $(newFormInput).attr("type", "text");
+    $(newFormInput).attr("placeholder", "your name");
+    $(newFormInput).attr("id", "nameInputBox");
+    $(newFormDiv).append(newFormInput);
+
+    //create the submit button
+    //<button type="submit" class="btn btn-primary">Submit</button>
+    var newFormButton = $("<button>");
+    $(newFormButton).addClass("btn btn-primary");
+    $(newFormButton).attr("type", "submit");
+    $(newFormButton).text("Submit");
+    $(newFormButton).attr("id", "nameSubmitBtn");
+    $(newFormButton).css("margin-top", "15px");
+    $(newFormDiv).append(newFormButton);
+
+}
 ////////////////////////////////////////////////////On Click Function Calls//////////////////////////////////////////////////////////////////////
 $("#startBtn").on("click", function () {
     $("#headerAndQText").empty();
@@ -135,11 +181,16 @@ $("#buttonsDiv").on("click", function (event) {
             $("#evalDiv").empty();
             clearTimeout(evalTimer);
         }, 750);
-        //clear the current question
-        $("#headerAndQText").empty();
-        $("#buttonsDiv").empty();
         if (currentQ < 5) {
+            //immediately clear the current question
+            $("#headerAndQText").empty();
+            $("#buttonsDiv").empty();
             loadQuestion();
+        }
+        else {
+            myScore = time;
+            clearInterval(timer);
+            var delayTimer = setTimeout(loadInputForm, 500);
         }
 
     }
