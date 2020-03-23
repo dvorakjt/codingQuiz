@@ -1,14 +1,14 @@
 # Read Me
 ## Coding Quiz
 ![quiz start screen](assets/start.png)
-This repo contains code for a coding quiz. Please see [this page](dvorakjt.github.io/codingQuiz/) for the deployed version of the quiz.
+This repo contains code for a coding quiz. Please see [https://dvorakjt.github.io/codingQuiz/](https://dvorakjt.github.io/codingQuiz/) for the deployed version of the quiz.
 > Written with [StackEdit](https://stackedit.io/).
 
 ## Basic Functionality
 ### Start Screen
 Upon initial load, the page displays a header, a description of the quiz, a start button, and a link to view high scores. The high scores are loaded, or, if none have been saved yet, placeholder names and scores are initialized.
 
-If the use clicks the Start the Quiz button, several things happen:
+If the user clicks the Start the Quiz button, several things happen:
 
 - First, the page is wiped clean of everything except the link to view the high scores.
 - Then, a timer is initialized, and a question is loaded.
