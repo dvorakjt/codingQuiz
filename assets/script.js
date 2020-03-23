@@ -63,7 +63,7 @@ $(document).ready(function () {
         $("#introAndFormText").empty();
         $("#buttonsDiv").empty();
         myScore = 0; //reset the score
-        myRank = 10;
+        myRank = 10; //reset your rank
         time = 75; //time in seconds
         currentQ = 0;
         minutes = String(Math.floor(time / 60)); //calculate minutes by dividing seconds by 60 and rounding down
@@ -94,7 +94,27 @@ $(document).ready(function () {
         uiTime = minutes + ":" + seconds; //concatenate the minutes and seconds strings
         $("#timer").text(uiTime); //display it to the user
         if (time <= 10) $("#timer").css("color", "red");
-        if (time === 0) clearInterval(timer); //if time has run out, stop counting down
+        if (time === 0) {
+            clearInterval(timer); //if time has run out, stop counting down
+            $("#headerAndQText").empty();
+            $("#introAndFormText").empty();
+            $("#buttonsDiv").empty();
+            $("#headerAndQText").text("Sorry, the timer has run out.");
+            $("#introAndFormText").text("Please try again.");
+            var tryAgain = $("<a>");
+            $(tryAgain).addClass("btn btn-primary");
+            $(tryAgain).attr("href", "index.html");
+            $(tryAgain).attr("role", "button");
+            $(tryAgain).text("Try Again");
+            $("#buttonsDiv").append(tryAgain);
+            var hsButton = $("<a>");
+            $(hsButton).addClass("btn btn-primary");
+            $(hsButton).attr("href", "highScores.html");
+            $(hsButton).attr("role", "button");
+            $(hsButton).css("margin-left", "5px");
+            $(hsButton).text("View High Scores");
+            $("#buttonsDiv").append(hsButton);
+        }
     }
     ////////////////////////////////////////////////////function to load questions///////////////////////////////////////////////////////////
     function loadQuestion() {
@@ -199,6 +219,7 @@ $(document).ready(function () {
                 evalText.text("Incorrect. Time - 10.");
                 evalText.css("color", "red");
                 time -= 10;
+                if (time < 0) time = 0;
                 //immediately update UI timer display
                 minutes = String(Math.floor(time / 60)); //calculate minutes and make it a string
                 seconds = (time % 60); //calculate seconds by using %
@@ -210,8 +231,8 @@ $(document).ready(function () {
                 }
                 uiTime = minutes + ":" + seconds; //concatenate the minutes and seconds strings
                 $("#timer").text(uiTime); //display it to the user
-                if (time <= 10) $("#timer").css("color", "red");
-                if (time === 0) clearInterval(timer);
+                if (time <= 10) $("#timer").css("color", "red"); //if there are 10 seconds or less remaining, the timer text color will be red
+                //when the time runs out, stop the timer, clear the currently display, and display a message.
             }
             //clear the eval div if there is still text there
             $("#evalDiv").empty();
@@ -222,13 +243,13 @@ $(document).ready(function () {
                 $("#evalDiv").empty();
                 clearTimeout(evalTimer);
             }, 750);
-            if (currentQ < 5) {
+            if (currentQ < 5 && time > 0) {
                 //immediately clear the current question
                 $("#headerAndQText").empty();
                 $("#buttonsDiv").empty();
                 loadQuestion();
             }
-            else {
+            else if (time > 0) {
                 myScore = time;
                 clearInterval(timer);
                 checkHighScores(myScore);
@@ -242,13 +263,43 @@ $(document).ready(function () {
                     $("#buttonsDiv").empty();
                     $("#headerAndQText").text("You scored " + myScore + " points.");
                     $("#introAndFormText").text("Sorry, that is not a high score.");
+                    var tryAgain = $("<a>");
+                    $(tryAgain).addClass("btn btn-primary");
+                    $(tryAgain).attr("href", "index.html");
+                    $(tryAgain).attr("role", "button");
+                    $(tryAgain).text("Try Again");
+                    $("#buttonsDiv").append(tryAgain);
+
                     var hsButton = $("<a>");
                     $(hsButton).addClass("btn btn-primary");
                     $(hsButton).attr("href", "highScores.html");
                     $(hsButton).attr("role", "button");
+                    $(hsButton).css("margin-left", "5px");
                     $(hsButton).text("View High Scores");
                     $("#buttonsDiv").append(hsButton);
                 }
+            }
+            else {
+                //if time has run out, stop counting down
+                clearInterval(timer);
+                $("#headerAndQText").empty();
+                $("#introAndFormText").empty();
+                $("#buttonsDiv").empty();
+                $("#headerAndQText").text("Sorry, the timer has run out.");
+                $("#introAndFormText").text("Please try again.");
+                var tryAgain = $("<a>");
+                $(tryAgain).addClass("btn btn-primary");
+                $(tryAgain).attr("href", "index.html");
+                $(tryAgain).attr("role", "button");
+                $(tryAgain).text("Try Again");
+                $("#buttonsDiv").append(tryAgain);
+                var hsButton = $("<a>");
+                $(hsButton).addClass("btn btn-primary");
+                $(hsButton).attr("href", "highScores.html");
+                $(hsButton).attr("role", "button");
+                $(hsButton).css("margin-left", "5px");
+                $(hsButton).text("View High Scores");
+                $("#buttonsDiv").append(hsButton);
             }
 
         }
