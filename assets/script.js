@@ -11,6 +11,7 @@ $(document).ready(function () {
     var myRank;
     var highScores = JSON.parse(localStorage.getItem("hsArr"));
     var highScoreNames = JSON.parse(localStorage.getItem("hsnArr"));
+    var askedQuestions = [];
     //if local storage data doesn't exist, make up some names and scores.
     if (!highScores) {
         highScoreNames = ["Anne", "Jerry", "Mary", "Tom", "Jo", "Mike", "Jake", "Zack", "Matt", "Steve"];
@@ -25,7 +26,7 @@ $(document).ready(function () {
         qRightAnswer: 1 // the index number of the correct answer
     }
     questions[1] = {
-        qText: "True or false: a Boolean variable can store an integer.",
+        qText: "True or false: In a strongly typed language, a Boolean variable can store a string.",
         qAnswers: ["True", "False"],
         qRightAnswer: 1 // the index number of the correct answer
     }
@@ -44,17 +45,31 @@ $(document).ready(function () {
         qAnswers: ["for", "i < 10;", "i++", "let i=0;"],
         qRightAnswer: 1 // the index number of the correct answer
     }
-    // questions[5] = {
-    //     qText: "Which type of loop will execute at least once even if the condition is initially false?",
-    //     qAnswers: ["do-while", "while", "for"],
-    //     qRightAnswer: 0 // the index number of the correct answer
-    // }
-    // questions[6] = {
-    //     qText: "Which of these is not one of the three primary languages used in web development?",
-    //     qAnswers: ["javaScript", "Fortran", "CSS", "HTML"],
-    //     qRightAnswer: 1 // the index number of the correct answer
-    // }
-
+    questions[5] = {
+        qText: "Which type of loop will execute at least once even if the condition is initially false?",
+        qAnswers: ["do-while", "while", "for"],
+        qRightAnswer: 0 // the index number of the correct answer
+    }
+    questions[6] = {
+        qText: "Which of these is not one of the three primary languages used in web development?",
+        qAnswers: ["javaScript", "HTML", "CSS", "Fortran"],
+        qRightAnswer: 3 // the index number of the correct answer
+    }
+    questions[7] = {
+        qText: "What is the correct syntax for creating a new HTML element using jQuery?",
+        qAnswers: ["$<\"(p)>\"", "$(<div>)", "$(\"<section>\")", "$(\"a\")"],
+        qRightAnswer: 2 // the index number of the correct answer
+    }
+    questions[8] = {
+        qText: "How do you select an element by ID in CSS?",
+        qAnswers: ["#elementID {", ".elementID {", "id=element {", "elementID {"],
+        qRightAnswer: 0 // the index number of the correct answer
+    }
+    questions[9] = {
+        qText: "True or False: an object an contain a function as one of its properties:",
+        qAnswers: ["True", "False"],
+        qRightAnswer: 0 // the index number of the correct answer
+    }
     /////////////////////////////////////////////////////initialize game/////////////////////////////////////////////////////////////////
 
     function initializeGame() {
@@ -66,6 +81,7 @@ $(document).ready(function () {
         myRank = 10; //reset your rank
         time = 75; //time in seconds
         currentQ = 0;
+        askedQuestions = [];
         minutes = String(Math.floor(time / 60)); //calculate minutes by dividing seconds by 60 and rounding down
         seconds = (time % 60); //calculate seconds but using modulus to find the remainder
         if (seconds < 10) { //if seconds is less than 10, add an extra zero in front of the number
@@ -119,9 +135,15 @@ $(document).ready(function () {
     ////////////////////////////////////////////////////function to load questions///////////////////////////////////////////////////////////
     function loadQuestion() {
         var newQuestion = $("<h3>");
-        newQuestion.text(questions[currentQ].qText);
+        var randQ;
+        do {
+            randQ = Math.floor(Math.random() * questions.length);
+        } while (askedQuestions.includes(randQ))
+        askedQuestions[currentQ] = randQ;
+
+        newQuestion.text(questions[randQ].qText);
         $("#headerAndQText").append(newQuestion);
-        for (let i = 0; i < questions[currentQ].qAnswers.length; i++) {
+        for (let i = 0; i < questions[randQ].qAnswers.length; i++) {
             const answer = $("<button>");
             var lineBreak = $("<br>");
 
@@ -129,8 +151,8 @@ $(document).ready(function () {
             answer.attr("class", "btn btn-primary");
             answer.css("margin", "10px");
             answer.attr("data-type", "ansBtn");
-            answer.text(questions[currentQ].qAnswers[i]);
-            if (i === questions[currentQ].qRightAnswer) {
+            answer.text(questions[randQ].qAnswers[i]);
+            if (i === questions[randQ].qRightAnswer) {
                 answer.attr("data-eval", "correct");
             }
             else {
@@ -252,18 +274,18 @@ $(document).ready(function () {
             else if (time > 0) {
                 myScore = time;
                 clearInterval(timer);
-                checkHighScores(myScore);
-                if (myRank <= 9) {
+                checkHighScores(myScore); //check the user's score and assign them a rank
+                if (myRank <= 9) { //if the rank is within the top 10, load the name input page
                     var delayTimer = setTimeout(loadInputForm, 500);
                     console.log(highScores);
                     console.log(highScoreNames);
                 }
-                else {
-                    $("#headerAndQText").empty();
+                else { //if it is not a top score...
+                    $("#headerAndQText").empty(); //empty all current text
                     $("#buttonsDiv").empty();
-                    $("#headerAndQText").text("You scored " + myScore + " points.");
+                    $("#headerAndQText").text("You scored " + myScore + " points."); //inform the user of their score
                     $("#introAndFormText").text("Sorry, that is not a high score.");
-                    var tryAgain = $("<a>");
+                    var tryAgain = $("<a>"); // create try again and high score buttons that direct the user to the quiz and high score pages
                     $(tryAgain).addClass("btn btn-primary");
                     $(tryAgain).attr("href", "index.html");
                     $(tryAgain).attr("role", "button");
@@ -281,13 +303,13 @@ $(document).ready(function () {
             }
             else {
                 //if time has run out, stop counting down
-                clearInterval(timer);
-                $("#headerAndQText").empty();
+                clearInterval(timer); //clear the timer
+                $("#headerAndQText").empty(); //clear all current text
                 $("#introAndFormText").empty();
                 $("#buttonsDiv").empty();
-                $("#headerAndQText").text("Sorry, the timer has run out.");
+                $("#headerAndQText").text("Sorry, the timer has run out."); //inform the user that time has run out
                 $("#introAndFormText").text("Please try again.");
-                var tryAgain = $("<a>");
+                var tryAgain = $("<a>"); //create two buttons that direct the user to the quiz and high scores pages respectively
                 $(tryAgain).addClass("btn btn-primary");
                 $(tryAgain).attr("href", "index.html");
                 $(tryAgain).attr("role", "button");
@@ -305,16 +327,16 @@ $(document).ready(function () {
         }
     })
 
+    //This handles the name submission button when the user earns a high score.
     $("#introAndFormText").on("click", function (event) {
-        event.preventDefault();
-        var element = event.target;
-        if ($(element).attr("id") === "nameSubmitBtn") {
-            if ($("#nameInputBox").val()) {
-                highScoreNames[myRank] = $("#nameInputBox").val();
-                console.log(highScoreNames);
-                localStorage.setItem("hsArr", JSON.stringify(highScores));
-                localStorage.setItem("hsnArr", JSON.stringify(highScoreNames));
-                location.href = "highScores.html";
+        event.preventDefault(); //prevents the page from refreshing
+        var element = event.target; //get the target of the click
+        if ($(element).attr("id") === "nameSubmitBtn") { //if the target is the name submit button
+            if ($("#nameInputBox").val()) { //if the user has any entered characters
+                highScoreNames[myRank] = $("#nameInputBox").val(); //replace the "Placeholder" string created earlier with the user input
+                localStorage.setItem("hsArr", JSON.stringify(highScores)); //convert the highScores array to a string and save it to storage
+                localStorage.setItem("hsnArr", JSON.stringify(highScoreNames)); //convert the highScoreNames array to a string and save it to storage
+                location.href = "highScores.html"; //redirect the user to the high scores page
             }
         }
     })
